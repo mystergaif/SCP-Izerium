@@ -1,0 +1,14 @@
+# Executables
+*.exe
+
+# Build directories
+build/
+build_mingw/
+
+# Downloaded libraries
+raylib-5.5_win64_mingw-w64.zip
+
+# Other potential temporary files
+#*~
+#*.swp
+#*.log
