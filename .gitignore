@@ -12,3 +12,9 @@ raylib-5.5_win64_mingw-w64.zip
 #*~
 #*.swp
 #*.log
+
+# Bullet Physics source directory
+bullet3/
+
+# Backup archive
+scp-game_backup.tar.gz
