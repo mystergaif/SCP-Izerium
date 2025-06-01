@@ -80,22 +80,13 @@ scp-game/
 
 2.  **Установите MinGW-w64:** Убедитесь, что MinGW-w64 установлен в вашей системе (см. раздел "Получение зависимостей").
 
-3.  **Выполните сборку:** В корневой директории проекта выполните следующую команду в терминале. Эта команда использует кросс-компилятор `x86_64-w64-mingw32-g++` для компиляции исходного файла `src/main.cpp` и компоновки его с необходимыми библиотеками Raylib и Bullet Physics, расположенными в директории `lib/`.
+3.  **Выполните сборку:** В корневой директории проекта находится скрипт `build_windows.sh`, который автоматизирует процесс сборки исполняемого файла для Windows с использованием MinGW-w64. Убедитесь, что скрипт имеет права на выполнение (`chmod +x build_windows.sh`), а затем запустите его в терминале:
 
     ```bash
-    x86_64-w64-mingw32-g++ src/main.cpp -o bin/game.exe -I./lib/raylib_win64_mingw/include -L./lib/raylib_win64_mingw/lib -lraylib -I./bullet3/src -L./lib/bullet_win64_mingw/lib -lBulletDynamics -lBulletCollision -lBulletSoftBody -lBulletInverseDynamics -lBullet3Common -lLinearMath -lBullet3Geometry -static -lwinmm -lgdi32 -lopengl32 -lcomdlg32
+    ./build_windows.sh
     ```
-    *   `-o bin/game.exe`: Указывает выходной файл исполняемого файла в директории `bin/`.
-    *   `-I./lib/raylib_win64_mingw/include`: Добавляет директорию с заголовочными файлами Raylib в пути поиска.
-    *   `-L./lib/raylib_win64_mingw/lib`: Добавляет директорию с библиотеками Raylib в пути поиска.
-    *   `-lraylib`: Компонует с библиотекой Raylib.
-    *   `-I./bullet3/src`: Добавляет директорию с заголовочными файлами Bullet Physics в пути поиска.
-    *   `-L./lib/bullet_win64_mingw/lib`: Добавляет директорию с библиотеками Bullet Physics в пути поиска.
-    *   `-lBulletDynamics -lBulletCollision -lBulletSoftBody -lBulletInverseDynamics -lBullet3Common -lLinearMath -lBullet3Geometry`: Указывает библиотеки Bullet Physics для компоновки.
-    *   `-static`: Статическая компоновка стандартных библиотек MinGW-w64.
-    *   `-lwinmm -lgdi32 -lopengl32 -lcomdlg32`: Дополнительные системные библиотеки Windows, необходимые для Raylib.
 
-4.  **Проверьте результат:** После успешного выполнения команды, исполняемый файл `game.exe` будет создан в директории `bin/`.
+4.  **Проверьте результат:** После успешного выполнения скрипта, исполняемый файл `game.exe` будет создан в директории `bin/`. Скрипт также выведет сообщение об успешной или неудачной сборке.
 
 ## Сборка под Linux
 
