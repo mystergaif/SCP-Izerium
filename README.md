@@ -34,38 +34,72 @@ scp-game/
 
 ## Получение зависимостей
 
-*   **MinGW-w64:** Установите через менеджер пакетов вашего дистрибутива Linux (например, `sudo apt install mingw-w64 g++-mingw-w64`).
-*   **Raylib для MinGW-w64:** Скачайте архив с официального сайта Raylib (например, `raylib-5.5_win64_mingw-w64.zip`) и распакуйте его содержимое в директорию `lib/raylib_win64_mingw/`.
-*   **Bullet Physics:** Скачайте исходники с GitHub (`git clone https://github.com/bulletphysics/bullet3.git`), перейдите в директорию `bullet3`. Для сборки под MinGW-w64, создайте директорию `build_mingw` внутри `bullet3`, перейдите в нее и выполните следующие команды CMake и make:
+Для успешной сборки проекта вам необходимо убедиться, что у вас установлены следующие зависимости:
+
+1.  **MinGW-w64:** Этот набор инструментов необходим для кросс-компиляции проекта под Windows на вашей системе Linux. Установите его с помощью менеджера пакетов вашего дистрибутива. Например, для Debian/Ubuntu:
+    ```bash
+    sudo apt update
+    sudo apt install mingw-w64 g++-mingw-w64
+    ```
+
+2.  **Raylib и Bullet Physics:** Необходимые скомпилированные библиотеки Raylib и Bullet Physics для Windows (MinGW-w64) уже включены в репозиторий в директории `lib/`. Вам не нужно скачивать или компилировать их отдельно, если вы собираете под Windows с использованием MinGW-w64 на Linux.
+
+    *   Если вам необходимо собрать Bullet Physics из исходников (например, для другой платформы или конфигурации), вы можете скачать их с GitHub (`git clone https://github.com/bulletphysics/bullet3.git`) и следовать инструкциям по сборке Bullet Physics для вашей целевой платформы. Инструкции по сборке Bullet Physics под MinGW-w64 на Linux приведены ниже для справки, но обычно это не требуется, так как библиотеки уже предоставлены.
+
+    **Сборка Bullet Physics под MinGW-w64 (для справки):**
+    Перейдите в директорию `bullet3`, создайте директорию `build_mingw` внутри нее, перейдите в `build_mingw` и выполните следующие команды CMake и make:
 
     ```bash
+    cd bullet3
+    mkdir build_mingw
+    cd build_mingw
     cmake .. -G "Unix Makefiles" -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ -DCMAKE_SYSTEM_NAME=Windows -DUSE_GRAPHICAL_BENCHMARK=OFF -DBUILD_BULLET2_DEMOS=OFF -DBUILD_CPU_DEMOS=OFF -DBUILD_EXTRAS=OFF
     make
     ```
-
-    После успешной сборки, скопируйте скомпилированные файлы библиотек (`.a`) из соответствующих поддиректорий в `bullet3/build_mingw/src/` в директорию `lib/bullet_win64_mingw/lib/`. Например:
-
+    После успешной сборки, скопируйте скомпилированные файлы библиотек (`.a`) из соответствующих поддиректорий в `bullet3/build_mingw/src/` в директорию `lib/bullet_win64_mingw/lib/` в корне вашего проекта. Например:
     ```bash
-    cp bullet3/build_mingw/src/LinearMath/libLinearMath.a lib/bullet_win64_mingw/lib/
-    cp bullet3/build_mingw/src/BulletCollision/libBulletCollision.a lib/bullet_win64_mingw/lib/
-    cp bullet3/build_mingw/src/BulletDynamics/libBulletDynamics.a lib/bullet_win64_mingw/lib/
-    cp bullet3/build_mingw/src/BulletSoftBody/libBulletSoftBody.a lib/bullet_win64_mingw/lib/
-    cp bullet3/build_mingw/src/BulletInverseDynamics/libBulletInverseDynamics.a lib/bullet_win64_mingw/lib/
-    cp bullet3/build_mingw/src/Bullet3Common/libBullet3Common.a lib/bullet_win64_mingw/lib/
-    cp bullet3/build_mingw/src/Bullet3Geometry/libBullet3Geometry.a lib/bullet_win64_mingw/lib/
+    cp bullet3/build_mingw/src/LinearMath/libLinearMath.a ../../lib/bullet_win64_mingw/lib/
+    cp bullet3/build_mingw/src/BulletCollision/libBulletCollision.a ../../lib/bullet_win64_mingw/lib/
+    cp bullet3/build_mingw/src/BulletDynamics/libBulletDynamics.a ../../lib/bullet_win64_mingw/lib/
+    cp bullet3/build_mingw/src/BulletSoftBody/libBulletSoftBody.a ../../lib/bullet_win64_mingw/lib/
+    cp bullet3/build_mingw/src/BulletInverseDynamics/libBulletInverseDynamics.a ../../lib/bullet_win64_mingw/lib/
+    cp bullet3/build_mingw/src/Bullet3Common/libBullet3Common.a ../../lib/bullet_win64_mingw/lib/
+    cp bullet3/build_mingw/src/Bullet3Geometry/libBullet3Geometry.a ../../lib/bullet_win64_mingw/lib/
     ```
+    (Примечание: пути для `cp` могут отличаться в зависимости от вашего текущего положения в терминале. Убедитесь, что вы копируете файлы в правильную директорию `lib/bullet_win64_mingw/lib/` относительно корня проекта.)
 
 ## Сборка под Windows (с использованием MinGW-w64 на Linux)
 
-Для сборки исполняемого файла под Windows (`.exe`) на машине Linux с использованием MinGW-w64, выполните следующую команду в корневой директории проекта. Убедитесь, что все зависимости получены и библиотеки Bullet Physics скопированы в `lib/bullet_win64_mingw/lib/`.
+Следуйте этим шагам для сборки исполняемого файла под Windows (`.exe`) на вашей машине Linux с использованием MinGW-w64:
 
-```bash
-x86_64-w64-mingw32-g++ src/main.cpp -o bin/game.exe -I./lib/raylib_win64_mingw/include -L./lib/raylib_win64_mingw/lib -lraylib -I./bullet3/src -L./lib/bullet_win64_mingw/lib -lBulletDynamics -lBulletCollision -lBulletSoftBody -lBulletInverseDynamics -lBullet3Common -lLinearMath -lBullet3Geometry -static -lwinmm -lgdi32 -lopengl32 -lcomdlg32
-```
+1.  **Клонируйте репозиторий:** Если вы еще этого не сделали, клонируйте проект с GitHub:
+    ```bash
+    git clone https://github.com/mystergaif/SCP-Izerium.git
+    cd SCP-Izerium
+    ```
+
+2.  **Установите MinGW-w64:** Убедитесь, что MinGW-w64 установлен в вашей системе (см. раздел "Получение зависимостей").
+
+3.  **Выполните сборку:** В корневой директории проекта выполните следующую команду в терминале. Эта команда использует кросс-компилятор `x86_64-w64-mingw32-g++` для компиляции исходного файла `src/main.cpp` и компоновки его с необходимыми библиотеками Raylib и Bullet Physics, расположенными в директории `lib/`.
+
+    ```bash
+    x86_64-w64-mingw32-g++ src/main.cpp -o bin/game.exe -I./lib/raylib_win64_mingw/include -L./lib/raylib_win64_mingw/lib -lraylib -I./bullet3/src -L./lib/bullet_win64_mingw/lib -lBulletDynamics -lBulletCollision -lBulletSoftBody -lBulletInverseDynamics -lBullet3Common -lLinearMath -lBullet3Geometry -static -lwinmm -lgdi32 -lopengl32 -lcomdlg32
+    ```
+    *   `-o bin/game.exe`: Указывает выходной файл исполняемого файла в директории `bin/`.
+    *   `-I./lib/raylib_win64_mingw/include`: Добавляет директорию с заголовочными файлами Raylib в пути поиска.
+    *   `-L./lib/raylib_win64_mingw/lib`: Добавляет директорию с библиотеками Raylib в пути поиска.
+    *   `-lraylib`: Компонует с библиотекой Raylib.
+    *   `-I./bullet3/src`: Добавляет директорию с заголовочными файлами Bullet Physics в пути поиска.
+    *   `-L./lib/bullet_win64_mingw/lib`: Добавляет директорию с библиотеками Bullet Physics в пути поиска.
+    *   `-lBulletDynamics -lBulletCollision -lBulletSoftBody -lBulletInverseDynamics -lBullet3Common -lLinearMath -lBullet3Geometry`: Указывает библиотеки Bullet Physics для компоновки.
+    *   `-static`: Статическая компоновка стандартных библиотек MinGW-w64.
+    *   `-lwinmm -lgdi32 -lopengl32 -lcomdlg32`: Дополнительные системные библиотеки Windows, необходимые для Raylib.
+
+4.  **Проверьте результат:** После успешного выполнения команды, исполняемый файл `game.exe` будет создан в директории `bin/`.
 
 ## Сборка под Linux
 
-Для сборки под Linux вам потребуется установить Raylib и Bullet Physics, скомпилированные для вашей системы Linux, с помощью вашего менеджера пакетов или скомпилировать их из исходников. Команда компиляции будет отличаться и использовать стандартный компилятор GCC/G++.
+Для сборки под Linux вам потребуется установить Raylib и Bullet Physics, скомпилированные для вашей системы Linux, с помощью вашего менеджера пакетов или скомпилировать их из исходников. Команда компиляции будет отличаться и использовать стандартный компилятор GCC/G++. Вам нужно будет адаптировать пути к заголовочным файлам и библиотекам в соответствии с вашей установкой.
 
 ## Запуск игры (Windows)
 

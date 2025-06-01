@@ -263,6 +263,14 @@ void UpdateGame() {
         }
     }
 
+    // --- Логика спавна куба по правой кнопке мыши ---
+    if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
+        if (numCubes < MAX_CUBES) {
+            Vector3 spawnPos = Vector3Add(camera.position, Vector3Scale(Vector3Normalize(Vector3Subtract(camera.target, camera.position)), GRAB_DISTANCE * 0.8f));
+            AddCube(spawnPos);
+        }
+    }
+
     // Если куб схвачен, перемещаем его перед камерой
     if (isGrabbing && grabbedCubeIndex != -1) {
         btRigidBody* body = movableCubes[grabbedCubeIndex].physicsBody;
